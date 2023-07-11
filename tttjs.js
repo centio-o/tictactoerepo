@@ -1,42 +1,95 @@
-const board = ['', '', '', '', '', '', '', '', ''];
-let currentPlayer = 'X';
+const yourId = "yourIdValue"; // Replace with your actual ID value
 
-function makeMove(index) {
-  if (board[index] === '') {
-    board[index] = currentPlayer;
-    document.getElementsByClassName('cell')[index].innerText = currentPlayer;
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-  }
-  checkWinner();
-}
+// Create a game
+const createGameUrl = `http://localhost:8080/tictactoe/tictactoeserver/createGame?key=${yourId}`;
 
-function checkWinner() {
-  const winningCombinations = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-    [0, 4, 8], [2, 4, 6]             // Diagonals
-  ];
-
-  for (let i = 0; i < winningCombinations.length; i++) {
-    const [a, b, c] = winningCombinations[i];
-    if (board[a] !== '' && board[a] === board[b] && board[a] === board[c]) {
-      alert(`Player ${board[a]} wins!`);
-      resetBoard();
-      return;
+fetch(createGameUrl)
+  .then(response => {
+    // Handle the response
+    if (response.ok) {
+      console.log("Game created successfully");
+    } else {
+      console.error("Failed to create the game");
     }
-  }
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error("An error occurred while creating the game:", error);
+  });
 
-  if (!board.includes('')) {
-    alert("It's a draw!");
-    resetBoard();
-  }
-}
+// Make a move
+const playerTile = "X"; // Replace with the actual player tile (X or O)
+const yPos = 1; // Replace with the actual y position
+const xPos = 2; // Replace with the actual x position
 
-function resetBoard() {
-  board.fill('');
-  const cells = document.getElementsByClassName('cell');
-  for (let i = 0; i < cells.length; i++) {
-    cells[i].innerText = '';
-  }
-  currentPlayer = 'X';
-}
+const moveUrl = `http://localhost:8080/tictactoe/tictactoeserver/move?key=${yourId}&tile=${playerTile}&y=${yPos}&x=${xPos}`;
+
+fetch(moveUrl)
+  .then(response => {
+    // Handle the response
+    if (response.ok) {
+      console.log("Move made successfully");
+    } else {
+      console.error("Failed to make the move");
+    }
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error("An error occurred while making the move:", error);
+  });
+
+// Reset the game
+const resetUrl = `http://localhost:8080/tictactoe/tictactoeserver/reset?key=${yourId}`;
+
+fetch(resetUrl)
+  .then(response => {
+    // Handle the response
+    if (response.ok) {
+      console.log("Game reset successfully");
+    } else {
+      console.error("Failed to reset the game");
+    }
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error("An error occurred while resetting the game:", error);
+  });
+
+// Check the game status
+const checkUrl = `http://localhost:8080/tictactoe/tictactoeserver/check?key=${yourId}`;
+
+fetch(checkUrl)
+  .then(response => {
+    // Handle the response
+    if (response.ok) {
+      console.log("Game status checked successfully");
+    } else {
+      console.error("Failed to check the game status");
+    }
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error("An error occurred while checking the game status:", error);
+  });
+
+// Get the game board
+const boardUrl = `http://localhost:8080/tictactoe/tictactoeserver/board?key=${yourId}`;
+
+fetch(boardUrl)
+  .then(response => {
+    // Handle the response
+    if (response.ok) {
+      console.log("Game board fetched successfully");
+      return response.json();
+    } else {
+      console.error("Failed to fetch the game board");
+    }
+  })
+  .then(boardData => {
+    // Handle the board data
+    console.log("Board data:", boardData);
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error("An error occurred while fetching the game board:", error);
+  });
